@@ -1,0 +1,24 @@
+{
+  "base_colors": [
+    { "name": "Pearl White", "hex": "#F5F5DC" },
+    { "name": "Ivory Cream", "hex": "#FFFFF0" },
+    { "name": "Light Gray", "hex": "#D3D3D3" },
+    { "name": "Medium Gray", "hex": "#A9A9A9" },
+    { "name": "Charcoal", "hex": "#36454F" },
+    { "name": "Midnight Black", "hex": "#121212" }
+  ],
+  "highlight_colors": [
+    { "name": "Metallic Gold", "hex": "#D4AF37" },
+    { "name": "Copper", "hex": "#B87333" },
+    { "name": "Bronze", "hex": "#CD7F32" },
+    { "name": "Silver", "hex": "#C0C0C0" },
+    { "name": "Ocean Blue", "hex": "#0077BE" },
+    { "name": "Teal", "hex": "#008080" },
+    { "name": "Emerald", "hex": "#50C878" },
+    { "name": "Burgundy", "hex": "#800020" },
+    { "name": "Ruby Red", "hex": "#E0115F" },
+    { "name": "Violet", "hex": "#7F00FF" },
+    { "name": "Coral", "hex": "#FF7F50" },
+    { "name": "Amber", "hex": "#FFBF00" }
+  ]
+}
