@@ -28,6 +28,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+async def root():
+    return {"service": "builder-nation-ai", "status": "ok"}
+
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
+
 def is_convex_quadrilateral(pts):
     if len(pts) != 4:
         return False
