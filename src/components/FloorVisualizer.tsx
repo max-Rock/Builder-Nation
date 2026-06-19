@@ -232,7 +232,7 @@ export default function FloorVisualizer() {
       const formData = new FormData();
       formData.append("image", roomImageFile);
       
-      const res = await fetch("http://localhost:8000/analyze-room", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/analyze-room`, {
         method: "POST",
         body: formData,
       });
@@ -290,7 +290,7 @@ export default function FloorVisualizer() {
       // 1. Validate corners
       const valForm = new FormData();
       valForm.append("corners", JSON.stringify(corners));
-      const valRes = await fetch("http://localhost:8000/validate-floor", {
+      const valRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/validate-floor`, {
         method: "POST",
         body: valForm,
       });
@@ -336,7 +336,7 @@ export default function FloorVisualizer() {
       applyForm.append("material_depth", materialDepth);
       applyForm.append("metallic_intensity", metallicIntensity.toString());
 
-      const applyRes = await fetch("http://localhost:8000/apply-floor", {
+      const applyRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/apply-floor`, {
         method: "POST",
         body: applyForm,
       });
