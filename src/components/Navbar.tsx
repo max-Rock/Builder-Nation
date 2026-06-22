@@ -128,8 +128,8 @@ export default function Navbar({ onBookClick }: NavbarProps) {
               }}
               className="w-full bg-brand-dark hover:bg-brand-dark-light text-white py-4 rounded-sm font-heading font-bold tracking-wider uppercase transition-all duration-300 flex items-center justify-center gap-2 text-base"
             >
-              <Calendar className="w-5 h-5 text-brand-gold" />
-              <span>Request Inspection</span>
+              <Calendar className="w-5 h-5 text-brand-gold shrink-0" />
+              <span className="leading-none">Request Inspection</span>
             </button>
           </div>
         </div>

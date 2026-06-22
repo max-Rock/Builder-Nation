@@ -1,0 +1,6 @@
+python-service/
+.next/
+*.pt
+*.pth
+weights/
+cache/

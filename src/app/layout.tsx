@@ -19,6 +19,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Builder Nation | Premium Renovation & Construction Services",
   description: "Builder Nation offers premium commercial and residential construction services. Flooring installation, roofing, waterproofing, professional painting, and custom interior/exterior designs. Get your free per-square-foot estimate today.",
+  icons: { icon: "/favicon.svg" },
 };
 
 export default function RootLayout({

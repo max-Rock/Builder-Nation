@@ -180,10 +180,43 @@ export default function FloorVisualizer() {
     link.click();
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const compressImage = (file: File, maxDim = 1200, quality = 0.85): Promise<File> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        let { width, height } = img;
+        if (width > maxDim || height > maxDim) {
+          const ratio = Math.min(maxDim / width, maxDim / height);
+          width = Math.round(width * ratio);
+          height = Math.round(height * ratio);
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) { resolve(file); return; }
+        ctx.drawImage(img, 0, 0, width, height);
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const compressed = new File([blob], file.name.replace(/\.[^.]+$/, ".jpg"), { type: "image/jpeg" });
+            resolve(compressed);
+          } else {
+            resolve(file);
+          }
+        }, "image/jpeg", quality);
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+      img.src = url;
+    });
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setRoomImageFile(file);
+      const compressed = await compressImage(file);
+      setRoomImageFile(compressed);
       const reader = new FileReader();
       reader.onload = (event) => {
         setRoomImage(event.target?.result as string);
@@ -220,7 +253,7 @@ export default function FloorVisualizer() {
         setMaterialDebugUrl(null);
         setPhase("DETECT_OPTION");
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(compressed);
     }
   };
 
@@ -231,13 +264,23 @@ export default function FloorVisualizer() {
     try {
       const formData = new FormData();
       formData.append("image", roomImageFile);
+      console.log("Sending image to backend...", roomImageFile.name, roomImageFile.size);
+      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000);
       
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/analyze-room`, {
         method: "POST",
         body: formData,
+        signal: controller.signal,
       });
+      clearTimeout(timeoutId);
       
-      if (!res.ok) throw new Error("Detection failed");
+      if (!res.ok) {
+        const errText = await res.text().catch(() => "");
+        console.error("Backend error:", res.status, errText);
+        throw new Error("Detection failed");
+      }
       const data = await res.json();
       
       if (data.corners && data.corners.length === 4) {

@@ -19,7 +19,7 @@ export default function BookingForm({ isOpen, onClose, prefilledData }: BookingF
   // Form fields
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState("+91 ");
   const [address, setAddress] = useState("");
   const [selectedSubId, setSelectedSubId] = useState("");
   const [areaSqFt, setAreaSqFt] = useState<number>(0);
@@ -68,13 +68,15 @@ export default function BookingForm({ isOpen, onClose, prefilledData }: BookingF
 
   if (!isOpen) return null;
 
-  // Flatten subservices list for selection drop down
-  const allSubServices = servicesData.flatMap((cat) => 
-    cat.subServices.map((sub) => ({
-      ...sub,
-      categoryTitle: cat.title
-    }))
-  );
+  // Flatten subservices list for selection drop down (flooring only)
+  const allSubServices = servicesData
+    .filter((cat) => cat.id === "flooring")
+    .flatMap((cat) => 
+      cat.subServices.map((sub) => ({
+        ...sub,
+        categoryTitle: cat.title
+      }))
+    );
 
   const activeSubService = allSubServices.find((s) => s.id === selectedSubId);
 
@@ -265,8 +267,15 @@ export default function BookingForm({ isOpen, onClose, prefilledData }: BookingF
                         type="tel"
                         required
                         value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        placeholder="+91 98765 43210"
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          if (!val.startsWith("+91 ")) {
+                            setPhone("+91 " + val.replace(/^\+91\s*/i, ""));
+                          } else {
+                            setPhone(val);
+                          }
+                        }}
+                        placeholder="98765 43210"
                         className="w-full bg-slate-50 border border-slate-200 text-brand-dark pl-10 pr-4 py-2.5 rounded-sm focus:outline-none focus:border-brand-gold text-sm"
                       />
                     </div>
@@ -428,8 +437,8 @@ export default function BookingForm({ isOpen, onClose, prefilledData }: BookingF
                     </>
                   ) : (
                     <>
-                      <Send className="w-3.5 h-3.5 text-brand-dark" />
-                      <span>Request Inspection</span>
+                      <Send className="w-4 h-4 text-brand-dark shrink-0" />
+                      <span className="leading-none">Request Inspection</span>
                     </>
                   )}
                 </button>
